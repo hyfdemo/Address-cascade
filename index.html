@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Routing Example App</title>
+    <style>
+	html{
+  font-size:16px;
+  width: 100%;
+  height: 100%;
+}
+body,#cityPick{
+  width: inherit;
+  height: inherit;
+}
+body,h3,p,ul{
+    margin:0;
+  padding:0;
+}
+body{
+	overflow: hidden;
+}
+li{
+	list-style: none;
+}
+a{
+  text-decoration: none;
+}
+#cityPick{
+	display: flex;
+}
+#province,#city,#district{
+	    overflow-y: auto;
+}
+#province{
+	flex-basis: 20%;
+}
+#city{
+	border-right: 1px solid #eee;
+}
+#city,#district{
+	flex-basis: 40%;
+}
+#city ul,#district ul{
+	display: flex;
+	flex-wrap: wrap;
+}
+#city li,#district li{
+	margin: 0.6rem;
+	border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+}
+#city li.active,#district li.active{
+	color: #fff;
+	background: red;
+}
+#province li.active{
+	color: red;
+	border-bottom-color: red;
+}
+#province li{
+	    border-bottom: 1px solid #eee;
+    padding:0.6rem 0;
+    text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <div id="cityPick">
+		<div id='province'>
+		<ul></ul>
+		</div>
+		<div id='city'>
+		<ul></ul>
+		</div>
+		<div id="district">
+	<ul></ul>
+		</div>
+    </div>
+    <script src="cityData.js"></script>
+    <script src='jquery-3.3.1.min.js'></script>
+    <script>
+    console.log(cityData)
+    var p=[],phtml=''
+    for(key in cityData){
+    	phtml+=`<li data-id=${key}>${cityData[key].name}</li>`
+    }
+    $('#province ul').html(phtml)
+    $('#city ul').on('click','li',function(){
+    	$(this).addClass('active').siblings().removeClass('active')
+    	var pid=$(this).data('pid'),cid=$(this).data('cid'),dhtml='',data=(cityData[pid].child)[cid].child;
+    	for(key in data){
+    		dhtml+=`<li data-cid=${key}>${data[key]}</li>`
+    	}
+    $('#district ul').html(dhtml)
+//$('#district li:first-child').addClass('active')
+    })
+    $('#province ul').on('click','li',function(){
+    	$(this).addClass('active').siblings().removeClass('active')
+    	var pid=$(this).data('id'),chtml='',data=cityData[pid].child
+    	for(key in data){
+    		chtml+=`<li data-pid=${pid} data-cid=${key}>${data[key].name}</li>`
+    	}
+    $('#city ul').html(chtml)
+    $('#city li:first-child').trigger('click')
+    })
+    $('#district ul').on('click','li',function(){
+    	$(this).addClass('active').siblings().removeClass('active')
+    })
+    $('#province li:first-child').trigger('click')
+    $('#city li:first-child').trigger('click')
+
+    </script>
+  </body>
+</html>
